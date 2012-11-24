@@ -50,7 +50,7 @@ def draw_cli(peak_heights):
 		if peak_heights[ peak_index ] < 0:
 			peak_heights[ peak_index ] = 0
 
-		print (str(peak_index)+": "+ '|'*int(bar_height))
+		print ( "%02d: %s" % (peak_index+1,'|'*int(bar_height) ) )
 
 def main(args):
 	index = args.source
