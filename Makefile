@@ -5,7 +5,7 @@ COPY_DEFAULTS=COPYING README
 PY_INCLUDE=/usr/include/python2.7
 
 impulse: python-impulse
-	cp Impulse.py $(BUILD_DIR)
+	cp impulse-cli.py $(BUILD_DIR)
 
 test-libimpulse: libimpulse
 	gcc src/test-libimpulse.c -L$(BUILD_DIR) $(LIBIMPULSE)\
@@ -26,4 +26,4 @@ clean:
 	rm -rf $(BUILD_DIR)/test-libimpulse
 	rm -rf $(BUILD_DIR)/libimpulse.so
 	rm -rf $(BUILD_DIR)/impulse.so
-	rm -rf $(BUILD_DIR)/Impulse.py
+	rm -rf $(BUILD_DIR)/impulse-cli.py

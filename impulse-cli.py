@@ -24,6 +24,7 @@
 
 import os, sys
 from time import sleep
+from subprocess import call
 import impulse
 
 def draw_cli(peak_heights):
@@ -64,7 +65,7 @@ if __name__ == '__main__':
 	import argparse
 	parser = argparse.ArgumentParser("pulse audio command line visualizer")
 	parser.add_argument("-s","--source",type=int,default=0)
-	parser.add_argument("-t","--sleep",type=float,default=0)
+	parser.add_argument("-t","--sleep",type=float,default=0.05)
 
 	args = parser.parse_args()
 	main( args )
