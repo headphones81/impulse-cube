@@ -45,12 +45,12 @@ def draw_cli(peak_heights):
 		if bar_height > peak_heights[ peak_index ]:
 			peak_heights[ peak_index ] = bar_height
 		else:
-			peak_heights[ peak_index ] -= 5
+			peak_heights[ peak_index ] -= 2
 
 		if peak_heights[ peak_index ] < 0:
 			peak_heights[ peak_index ] = 0
 
-		print ( "%02d: %s" % (peak_index+1,'|'*int(bar_height) ) )
+		print ( "%02d: %s" % (peak_index+1,'|'*int(peak_heights[peak_index]) ) )
 
 def main(args):
 	index = args.source
