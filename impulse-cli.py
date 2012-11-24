@@ -45,7 +45,7 @@ def draw_cli(peak_heights):
 		if bar_height > peak_heights[ peak_index ]:
 			peak_heights[ peak_index ] = bar_height
 		else:
-			peak_heights[ peak_index ] -= 2
+			peak_heights[ peak_index ] -= 3
 
 		if peak_heights[ peak_index ] < 0:
 			peak_heights[ peak_index ] = 0
