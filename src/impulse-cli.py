@@ -50,10 +50,7 @@ def draw_cli(peak_heights):
 def draw_curses(stdscr,peak_heights,mode):
 	stdscr.clear()
 	screen_size = stdscr.getmaxyx()
-	maxy,maxx = screen_size
 	for i,height in enumerate(peak_heights):
-		if height > maxx-5:
-			height = maxx-5
 		try:
 			if mode[0] == 'horizontal':
 				draw_horizontal_column(stdscr,screen_size,mode,i,height)
@@ -68,6 +65,8 @@ def draw_curses(stdscr,peak_heights,mode):
 # used by draw_curses - draw one horizontal column
 def draw_horizontal_column(stdscr,screen_size,mode,i,height):
 	maxy,maxx = screen_size
+	if height > maxx-5:
+		height = maxx-5
 	column = '|'*int(height)
 	# mode dependent
 	if mode[1] == "right":
@@ -84,17 +83,23 @@ def draw_horizontal_column(stdscr,screen_size,mode,i,height):
 	else:
 		starty = maxy-32
 	#
+	if i+starty < 0: return 
 	stdscr.addstr(i+starty,startx,column)
 
 # used by draw_curses - draw one vertical column
 def draw_vertical_column(stdscr,screen_size,mode,i,height):
 	maxy,maxx = screen_size
 	height = int(height)
+	if height > maxy:
+		height = maxy
+	#
 	startx = maxx/2 - 32
 	if mode[2] == "top":
 		starty = 0
 	if mode[2] == "bottom":
 		starty = maxy - height
+	#
+	if startx+(i*2) < 0 or (startx+(i*2)+2) >= maxx: return
 	for j in range(0,height):
 		stdscr.addstr(starty+j,startx+(i*2),"##")
 
