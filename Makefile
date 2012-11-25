@@ -5,7 +5,7 @@ COPY_DEFAULTS=COPYING README
 PY_INCLUDE=/usr/include/python2.7
 
 impulse: python-impulse
-	cp impulse-cli.py $(BUILD_DIR)
+	cp src/impulse-cli.py $(BUILD_DIR)
 
 test-libimpulse: libimpulse
 	gcc src/test-libimpulse.c -L$(BUILD_DIR) $(LIBIMPULSE)\
