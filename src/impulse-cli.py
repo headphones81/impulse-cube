@@ -57,11 +57,13 @@ def draw_curses(stdscr,peak_heights,mode):
 		try:
 			if mode[0] == 'horizontal':
 				draw_horizontal_column(stdscr,screen_size,mode,i,height)
+			else:	
+				draw_vertical_column(stdscr,screen_size,mode,i,height)
 		except _curses.error:
 			# if the terminal window is resized, we need to recalculate
 			# maxx and all - so just return and do it next time round
 			return
-		stdscr.refresh()
+	stdscr.refresh()
 
 # used by draw_curses - draw one horizontal column
 def draw_horizontal_column(stdscr,screen_size,mode,i,height):
@@ -83,6 +85,18 @@ def draw_horizontal_column(stdscr,screen_size,mode,i,height):
 		starty = maxy-32
 	#
 	stdscr.addstr(i+starty,startx,column)
+
+# used by draw_curses - draw one vertical column
+def draw_vertical_column(stdscr,screen_size,mode,i,height):
+	maxy,maxx = screen_size
+	height = int(height)
+	startx = maxx/2 - 32
+	if mode[2] == "top":
+		starty = 0
+	if mode[2] == "bottom":
+		starty = maxy - height
+	for j in range(0,height):
+		stdscr.addstr(starty+j,startx+(i*2),"##")
 
 def get_mode_curses(stdscr,curr_mode):
 	curr_mode = list(curr_mode) # make it modifiable ..
