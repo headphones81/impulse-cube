@@ -37,23 +37,87 @@ def draw_cli(peak_heights):
 	for i,height in enumerate(peak_heights):
 		print ( "%02d: %s" % (i+1,'|'*int(height)) )
 
-def draw_curses(stdscr,peak_heights):
+# mode: where and how to draw
+#	(type, x-pos, y-pos)
+#	type can be either 'vertical' or 'horizontal'
+#		'horizontal' supports any combination of:
+#			x-pos: 'left','right,'center'
+#			y-pos: 'top', 'bottom'
+#		'vertical' supports:
+#			x-pos: 'center'
+#			y-pos: 'top', 'bottom'
+#	example: ('horizontal','center','top')
+def draw_curses(stdscr,peak_heights,mode):
 	stdscr.clear()
-	maxy,maxx = stdscr.getmaxyx()
+	screen_size = stdscr.getmaxyx()
+	maxy,maxx = screen_size
 	for i,height in enumerate(peak_heights):
 		if height > maxx-5:
 			height = maxx-5
-		column = '|'*int(height)
-		column += " :%02d" % (i+1)
-		startx = maxx - len(column) -1 # -1 because of cursor
 		try:
-			stdscr.addstr(i,startx,column)
+			if mode[0] == 'horizontal':
+				draw_horizontal_column(stdscr,screen_size,mode,i,height)
 		except _curses.error:
 			# if the terminal window is resized, we need to recalculate
 			# maxx and all - so just return and do it next time round
 			return
 		stdscr.refresh()
 
+# used by draw_curses - draw one horizontal column
+def draw_horizontal_column(stdscr,screen_size,mode,i,height):
+	maxy,maxx = screen_size
+	column = '|'*int(height)
+	# mode dependent
+	if mode[1] == "right":
+		column += " :%02d" % (i+1)
+		startx = maxx - len(column) -1 # -1 because of cursor
+	elif mode[1] == "left":
+		column = "%02d: " % (i+1) + column
+		startx = 0
+	elif mode[1] == "center":
+		startx = maxx/2 - len(column)/2
+
+	if mode[2] == 'top':
+		starty = 0
+	else:
+		starty = maxy-32
+	#
+	stdscr.addstr(i+starty,startx,column)
+
+def get_mode_curses(stdscr,curr_mode):
+	curr_mode = list(curr_mode) # make it modifiable ..
+	key = stdscr.getch()
+
+	if key == curses.KEY_LEFT:
+		# vertical doesnt support x-axis movements
+		if curr_mode[0] != "vertical":
+			if curr_mode[1] == "right":
+				curr_mode[1] = "center"
+			else:
+				curr_mode[1] = "left"
+	elif key == curses.KEY_RIGHT:
+		# vertical doesnt support x-axis movements
+		if curr_mode[0] != "vertical":
+			if curr_mode[1] == "left":
+				curr_mode[1] = "center"
+			else:
+				curr_mode[1] = "right"
+
+	elif key == curses.KEY_UP:
+		if curr_mode[2] == "bottom":
+			curr_mode[2] = "top"
+	elif key == curses.KEY_DOWN:
+		if curr_mode[2] == "top":
+			curr_mode[2] = "bottom"
+
+	elif key == ord(" "):
+		if curr_mode[0] == "vertical":
+			curr_mode[0] = 'horizontal'
+		elif curr_mode[0] == "horizontal":
+			curr_mode[0] = 'vertical'
+			curr_mode[1] = 'center'
+	return tuple(curr_mode) # .. and return as a tuple
+	
 def calc_heights(peak_heights,max_size):
 	ffted_array = impulse.getSnapshot( True ) # True = use fft
 
@@ -91,9 +155,13 @@ def main(args):
 			stdscr.keypad(1)
 			stdscr.nodelay(1) # make getch non-blocking
 
+			draw_mode = ('horizontal','left','top') # default mode for draw_curses
 			while True:
 				calc_heights(peak_heights,args.size)
-				draw_curses(stdscr,peak_heights)
+
+				draw_mode = get_mode_curses(stdscr,draw_mode)
+
+				draw_curses(stdscr,peak_heights,draw_mode)
 				curses.napms(int(args.sleep*1000))
 
 		finally:
