@@ -1,1 +1,18 @@
-visualize audio from pulse audio to command line (forked from impulse (http://impulse.ian-halpern.com/) )
+impulse-cube is a spectrum analyzer for pulse audio which uses Futuro cube (http://www.futurocube.com/) to visualize music.
+
+Dependencies:
+    * python-dev
+    * fftw-dev
+    * libpulse-dev
+    * pyserial (In Ubuntu: python-serial)
+
+    Install deps on Ubuntu:
+        sudo aptitude install python-dev fftw-dev libpulse-dev python-serial
+
+Build:
+    make
+
+Run:
+    ./impulse-cube.py
+
+(Original impulse library forked from impulse (http://impulse.ian-halpern.com/) )
