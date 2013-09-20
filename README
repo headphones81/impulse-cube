@@ -2,12 +2,12 @@ impulse-cube is a spectrum analyzer for pulse audio which uses Futuro cube (http
 
 Dependencies:
     * python-dev
-    * fftw-dev
+    * fftw3-dev
     * libpulse-dev
     * pyserial (In Ubuntu: python-serial)
 
     Install deps on Ubuntu:
-        sudo aptitude install python-dev fftw-dev libpulse-dev python-serial
+        sudo aptitude install python-dev fftw3-dev libpulse-dev python-serial
 
 Build:
     make
